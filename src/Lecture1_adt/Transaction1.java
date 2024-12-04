@@ -16,3 +16,4 @@ public class Transaction1 {
         this.date = (Calendar) date.clone();
     }
 }
+

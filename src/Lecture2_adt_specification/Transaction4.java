@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 /**
  * In Addition to the Design considerations in Transaction4 class:
- * This class adds Specifications defining the Requires and Produces interfaces
+ * This class adds Specifications defining the Required and Produces interfaces
  */
 
 public class Transaction4 {

@@ -10,11 +10,7 @@ public class WithdrawalTransaction extends BaseTransaction {
     }
 
     private boolean checkDepositAmount(int amt) {
-        if (amt < 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return amt >= 0;
     }
 
     // Method to reverse the transaction
@@ -24,7 +20,7 @@ public class WithdrawalTransaction extends BaseTransaction {
 
     // Method to print a transaction receipt or details
     public void printTransactionDetails() {
-        System.out.println("Deposit Trasaction: " + this.toString());
+        System.out.println("Deposit Transaction: " + this);
     }
 
     /*
@@ -41,5 +37,26 @@ public class WithdrawalTransaction extends BaseTransaction {
     /*
     Assignment 1 Q3: Write the Reverse method - a method unique to the WithdrawalTransaction Class
      */
-}
 
+
+    // Method to reverse the withdrawal transaction
+    
+    public boolean reverse() {
+        if (isReversed) {
+            System.out.println("Transaction has already been reversed.");
+            return false;
+        }
+
+        if (associatedAccount == null) {
+            System.out.println("Transaction was not applied to any account.");
+            return false;
+        }
+
+        // Add the amount back to the associated account
+        double new_balance = associatedAccount.getBalance() + getAmount();
+        associatedAccount.setBalance(new_balance);
+        isReversed = true; // Mark the transaction as reversed
+        System.out.println("Withdrawal of $" + getAmount() + " has been reversed. New balance: $" + associatedAccount.getBalance());
+        return true;
+    }
+}
