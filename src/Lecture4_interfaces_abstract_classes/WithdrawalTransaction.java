@@ -5,6 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 
 public class WithdrawalTransaction extends BaseTransaction {
+    private final double shortFallAmount = 0;
+    private boolean isReversed = false;
+    private BankAccount associatedAccount;
+
     public WithdrawalTransaction(int amount, @NotNull Calendar date) {
         super(amount, date);
     }
@@ -14,33 +18,47 @@ public class WithdrawalTransaction extends BaseTransaction {
     }
 
     // Method to reverse the transaction
-    public boolean reverse() {
-        return true;
-    } // return true if reversal was successful
+
 
     // Method to print a transaction receipt or details
     public void printTransactionDetails() {
-        System.out.println("Deposit Transaction: " + this);
+        System.out.println("Withdrawal Transaction: " + this);
     }
 
-    /*
-    Oportunity for assignment: implementing different form of withdrawal
-     */
-    public void apply(BankAccount ba) {
-        double curr_balance = ba.getBalance();
-        if (curr_balance > getAmount()) {
-            double new_balance = curr_balance - getAmount();
-            ba.setBalance(new_balance);
+
+    // Overloaded apply() method with exception handling
+    @Override
+    // Overloaded apply() method with exception handling
+    public void apply(BankAccount ba) throws InsufficientFundsException {
+        if (ba.getBalance() <= 0) {
+            throw new InsufficientFundsException("Cannot withdraw from an account with zero or negative balance.");
+        }
+
+        double currentBalance = ba.getBalance();
+        if (currentBalance >= getAmount()) {
+            ba.setBalance(currentBalance - getAmount());
+            associatedAccount = ba;
+            System.out.println("Withdrawal of $" + getAmount() + " applied. New balance: $" + ba.getBalance());
+        } else {
+            shortfallAmount = getAmount() - currentBalance;
+            ba.setBalance(0);
+            associatedAccount = ba;
+            System.out.println("Insufficient funds. Withdrawn $" + currentBalance + " from the account. Shortfall: $" + shortfallAmount);
         }
     }
 
-    /*
-    Assignment 1 Q3: Write the Reverse method - a method unique to the WithdrawalTransaction Class
-     */
+    // Apply method using try-catch-finally
+    public void applyWithHandling(BankAccount ba) {
+        try {
+            apply(ba);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            System.out.println("Transaction attempt completed.");
+        }
+    }
 
-
-    // Method to reverse the withdrawal transaction
-    
+    // Reverse the transaction
     public boolean reverse() {
         if (isReversed) {
             System.out.println("Transaction has already been reversed.");
@@ -52,11 +70,19 @@ public class WithdrawalTransaction extends BaseTransaction {
             return false;
         }
 
-        // Add the amount back to the associated account
-        double new_balance = associatedAccount.getBalance() + getAmount();
-        associatedAccount.setBalance(new_balance);
-        isReversed = true; // Mark the transaction as reversed
-        System.out.println("Withdrawal of $" + getAmount() + " has been reversed. New balance: $" + associatedAccount.getBalance());
+        // Reverse full or partial withdrawal
+        double reversalAmount = getAmount() - shortfallAmount; // Amount to add back
+        associatedAccount.setBalance(associatedAccount.getBalance() + reversalAmount);
+        isReversed = true; // Mark transaction as reversed
+        System.out.println("Withdrawal of $" + reversalAmount + " has been reversed. New balance: $" + associatedAccount.getBalance());
         return true;
     }
+
+    public double getShortfallAmount() {
+        return shortfallAmount;
+    }
 }
+
+
+
+

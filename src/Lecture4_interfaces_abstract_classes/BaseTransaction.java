@@ -53,5 +53,5 @@ public abstract class BaseTransaction implements TransactionInterface {
     // Method to print a transaction receipt or details
     public abstract void printTransactionDetails();
 
-    public abstract void apply(BankAccount ba);
+    public abstract void apply(BankAccount ba) throws Exception;
 }
