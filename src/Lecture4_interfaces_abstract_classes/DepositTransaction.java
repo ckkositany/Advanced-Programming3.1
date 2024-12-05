@@ -9,7 +9,7 @@ public class DepositTransaction extends BaseTransaction {
         super(amount, date);
     }
 
-    private boolean checkDepositAmount(int amt) {
+    private boolean checkDepositAmount(double amt) {
         return amt >= 0;
     }
 

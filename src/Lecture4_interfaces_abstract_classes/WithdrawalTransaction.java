@@ -7,6 +7,7 @@ import java.util.Calendar;
 public class WithdrawalTransaction extends BaseTransaction {
     private final double shortFallAmount = 0;
     private boolean isReversed = false;
+    private double shortfallAmount = 0;
     private BankAccount associatedAccount;
 
     public WithdrawalTransaction(int amount, @NotNull Calendar date) {
