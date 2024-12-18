@@ -4,32 +4,58 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
+/**
+ * WithdrawalTransaction class.
+ * Represents a withdrawal transaction applied to a bank account.
+ * Handles scenarios where the balance is insufficient and allows reversing the transaction.
+ *
+ * @author kositanyck
+ * @see BaseTransaction
+ * @since 1.0.0
+ */
 public class WithdrawalTransaction extends BaseTransaction {
     private final double shortFallAmount = 0;
     private boolean isReversed = false;
     private double shortfallAmount = 0;
     private BankAccount associatedAccount;
 
+    /**
+     * Constructor for creating a WithdrawalTransaction instance.
+     *
+     * @param amount The amount to be withdrawn. Must be non-negative.
+     * @param date   The date of the transaction. Must not be null.
+     */
     public WithdrawalTransaction(int amount, @NotNull Calendar date) {
         super(amount, date);
     }
 
+    /**
+     * Validates if the deposit amount is non-negative.
+     *
+     * @param amt The amount to validate.
+     * @return true if the amount is valid (non-negative), false otherwise.
+     */
     private boolean checkDepositAmount(int amt) {
         return amt >= 0;
     }
 
-    // Method to reverse the transaction
-
-
-    // Method to print a transaction receipt or details
+    /**
+     * Prints the details of the withdrawal transaction.
+     * Includes metadata such as amount and date.
+     */
     public void printTransactionDetails() {
         System.out.println("Withdrawal Transaction: " + this);
     }
 
-
-    // Overloaded apply() method with exception handling
+    /**
+     * Applies the withdrawal transaction to a bank account.
+     * If the account has insufficient balance, withdraws all available balance and records the shortfall amount.
+     *
+     * @param ba The bank account to which the withdrawal will be applied. Must not be null.
+     * @throws InsufficientFundsException Thrown if the account balance is zero or negative.
+     * @see BankAccount#setBalance(double)
+     */
     @Override
-    // Overloaded apply() method with exception handling
     public void apply(BankAccount ba) throws InsufficientFundsException {
         if (ba.getBalance() <= 0) {
             throw new InsufficientFundsException("Cannot withdraw from an account with zero or negative balance.");
@@ -48,7 +74,12 @@ public class WithdrawalTransaction extends BaseTransaction {
         }
     }
 
-    // Apply method using try-catch-finally
+    /**
+     * Applies the withdrawal transaction to a bank account with exception handling.
+     * Wraps the apply() method in a try-catch-finally block.
+     *
+     * @param ba The bank account to which the withdrawal will be applied. Must not be null.
+     */
     public void applyWithHandling(BankAccount ba) {
         try {
             apply(ba);
@@ -59,7 +90,12 @@ public class WithdrawalTransaction extends BaseTransaction {
         }
     }
 
-    // Reverse the transaction
+    /**
+     * Reverses the withdrawal transaction.
+     * Restores the account balance by adding back the withdrawn amount or partial amount in case of a shortfall.
+     *
+     * @return true if the reversal was successful, false otherwise.
+     */
     public boolean reverse() {
         if (isReversed) {
             System.out.println("Transaction has already been reversed.");
@@ -71,7 +107,6 @@ public class WithdrawalTransaction extends BaseTransaction {
             return false;
         }
 
-        // Reverse full or partial withdrawal
         double reversalAmount = getAmount() - shortfallAmount; // Amount to add back
         associatedAccount.setBalance(associatedAccount.getBalance() + reversalAmount);
         isReversed = true; // Mark transaction as reversed
@@ -79,11 +114,13 @@ public class WithdrawalTransaction extends BaseTransaction {
         return true;
     }
 
+    /**
+     * Retrieves the shortfall amount from the withdrawal transaction.
+     * The shortfall is the difference between the requested amount and the account's available balance.
+     *
+     * @return The shortfall amount as a double.
+     */
     public double getShortfallAmount() {
         return shortfallAmount;
     }
 }
-
-
-
-
