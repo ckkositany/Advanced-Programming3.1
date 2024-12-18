@@ -5,21 +5,43 @@ import Lecture4_interfaces_abstract_classes.WithdrawalTransaction;
 
 import java.util.Calendar;
 
+/**
+ * Main class to demonstrate the functionality of BankAccount, DepositTransaction,
+ * WithdrawalTransaction, and their interactions.
+ * This class includes:
+ * - Creating and testing DepositTransaction and WithdrawalTransaction objects.
+ * - Demonstrating exception handling for invalid transactions.
+ * - Reversing a withdrawal transaction and verifying the balance.
+ *
+ * @author kositanyck
+ * @see BankAccount
+ * @see BaseTransaction
+ * @see DepositTransaction
+ * @see WithdrawalTransaction
+ * @since 1.0.0
+ */
 public class Main {
+    /**
+     * Entry point of the program.
+     * Demonstrates the creation of transactions, their application to a bank account,
+     * error handling for invalid scenarios, and transaction reversal.
+     *
+     * @param args command-line arguments (not used in this implementation).
+     */
     public static void main(String[] args) {
-        // Step 1: Create a BankAccount object
+
         BankAccount account = new BankAccount(100); // Initial balance: $100
         System.out.println("Initial Account Balance: $" + account.getBalance());
 
-        // Step 2: Create a DepositTransaction object
+
         Calendar date1 = Calendar.getInstance();
         DepositTransaction deposit = new DepositTransaction(50, date1); // Deposit $50
 
-        // Step 3: Create a WithdrawalTransaction object
+
         Calendar date2 = Calendar.getInstance();
         WithdrawalTransaction withdrawal = new WithdrawalTransaction(30, date2); // Withdraw $30
 
-        // Step 4: Test apply() method using BaseTransaction reference (Type Casting)
+
         BaseTransaction baseDeposit = deposit; // Casting DepositTransaction to BaseTransaction
         BaseTransaction baseWithdrawal = withdrawal; // Casting WithdrawalTransaction to BaseTransaction
 
@@ -35,7 +57,7 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
 
-        // Step 5: Test invalid deposit and withdrawal scenarios
+
         try {
             BaseTransaction invalidDeposit = new DepositTransaction(-20, date1); // Invalid deposit
             invalidDeposit.apply(account); // Should throw InvalidDepositAmountException
@@ -50,7 +72,7 @@ public class Main {
             System.out.println("Insufficient Funds Error: " + e.getMessage());
         }
 
-        // Step 6: Test reversal of a withdrawal transaction
+
         withdrawal.reverse(); // Reverse the $30 withdrawal
         System.out.println("After Reversing Withdrawal: $" + account.getBalance());
     }
